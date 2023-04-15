@@ -18,6 +18,14 @@ __published:	// IDE-managed Components
 	TButton *ClearTableButton;
 	TButton *ExitButton;
 	TLabel *StringInfoLabel;
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall DisplayHistoryButtonClick(TObject *Sender);
+	void __fastcall VirtualStringTreeGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
+          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);
+	void __fastcall VirtualStringTreeNodeClick(TBaseVirtualTree *Sender, const THitInfo &HitInfo);
+
+
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
