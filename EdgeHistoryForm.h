@@ -18,6 +18,7 @@ __published:	// IDE-managed Components
 	TButton *ClearTableButton;
 	TButton *ExitButton;
 	TLabel *StringInfoLabel;
+	TComboBox *ChooseBrowser;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall DisplayHistoryButtonClick(TObject *Sender);
@@ -27,6 +28,7 @@ __published:	// IDE-managed Components
 	void __fastcall ClearTableButtonClick(TObject *Sender);
 	void __fastcall ExitButtonClick(TObject *Sender);
 	void __fastcall DeleteStringButtonClick(TObject *Sender);
+	void __fastcall ChooseBrowserSelect(TObject *Sender);
 
 
 private:	// User declarations

@@ -1,6 +1,8 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
 #include <string>
+#include "windows.h"
+#include "Shlwapi.h"
 #pragma hdrstop
 
 #include "EdgeHistoryForm.h"
@@ -18,6 +20,7 @@ String Title;
 sqlite3* DB;
 sqlite3_stmt* stmt;
 char* errmsg;
+char* path;
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
 	: TForm(Owner)
@@ -27,20 +30,34 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-	char* path = getenv("APPDATA");
+	path = getenv("APPDATA");
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
+{
 	std::string str = path;
-	//Для браузера Edge
-	str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
-	//Для браузера Chrome
-	//str = str + "\\..\\Local\\Google\\Chrome\\User Data\\Default\\History";
-	//Для браузера Yandex
-	//str = str + "\\..\\Local\\Yandex\\YandexBrowser\\User Data\\Default\\History";
-	int res = sqlite3_open(str.c_str(), &DB);
-	if (res != SQLITE_OK) {
-		ShowMessage("Ошибка открытия базы данных");
-		sqlite3_finalize(stmt);
-		ExitProcess(0);
+	auto sel = ChooseBrowser->ItemIndex;
+	switch (sel) {
+		case 0:
+			str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
+			break;
+		case 1:
+			str = str + "\\..\\Local\\Google\\Chrome\\User Data\\Default\\History";
+			break;
+		case 2:
+			str = str + "\\..\\Local\\Yandex\\YandexBrowser\\User Data\\Default\\History";
 	}
+	bool file_valid = PathFileExistsA(str.c_str());
+	if (file_valid == 1) {
+		int res = sqlite3_open(str.c_str(), &DB);
+		if (res != SQLITE_OK) {
+			ShowMessage("Ошибка открытия базы данных");
+			sqlite3_finalize(stmt);
+			ExitProcess(0);
+		}
+	}
+    else ShowMessage("Ошибка открытия базы данных\n\
+			Возможно, данный браузер не установлен");
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormDestroy(TObject *Sender)
@@ -51,6 +68,7 @@ void __fastcall TForm1::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::DisplayHistoryButtonClick(TObject *Sender)
 {
+
 	VirtualStringTree->Clear();
 	const char* sql = "SELECT * FROM urls";
 	int result = sqlite3_prepare_v2(DB, sql, -1, &stmt, NULL);
@@ -135,3 +153,4 @@ void __fastcall TForm1::ExitButtonClick(TObject *Sender)
 	ExitProcess(0);
 }
 //---------------------------------------------------------------------------
+
