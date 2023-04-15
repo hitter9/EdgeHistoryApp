@@ -58,8 +58,12 @@ void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
 			ExitProcess(0);
 		}
 	}
-	else ShowMessage("Ошибка открытия базы данных\n\
+	else {
+		ShowMessage("Ошибка открытия базы данных\n\
 			Возможно, данный браузер не установлен");
+		DisplayHistoryButton->Enabled = 0;
+		DeleteStringButton->Enabled = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormDestroy(TObject *Sender)
