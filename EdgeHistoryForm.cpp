@@ -29,7 +29,10 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
 	char* path = getenv("APPDATA");
 	std::string str = path;
+	//Для браузера Edge
 	str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
+	//Для браузера Chrome
+	//str = str + "\\..\\Local\\Google\\Chrome\\User Data\\Default\\History";
 	int res = sqlite3_open(str.c_str(), &DB);
 	if (res != SQLITE_OK) {
 		ShowMessage("Ошибка открытия базы данных");
@@ -88,13 +91,20 @@ void __fastcall TForm1::VirtualStringTreeNodeClick(TBaseVirtualTree *Sender, con
 {
 	PVirtualNode Node = Sender->GetFirstSelected();
 	data* Data = (data*)Sender->GetNodeData(Node);
-	std::string sql = "SELECT visit_count FROM urls WHERE \
-	id=" + std::to_string(Data->ID);
-	int result = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
+	std::string sql_vc = "SELECT visit_count FROM urls WHERE \
+		id=" + std::to_string(Data->ID);
+	int result = sqlite3_prepare_v2(DB, sql_vc.c_str(), -1, &stmt, NULL);
 	result = sqlite3_step(stmt);
 	int vc = sqlite3_column_int(stmt, 0);
-	std::string vc_inf = "Число посещений: " + std::to_string(vc);
-	StringInfoLabel->Caption=vc_inf.c_str();
+	std::string sql_lvt = "SELECT datetime(last_visit_time / 1000000 \
+		+ (strftime('%s', '1601-01-01')), 'unixepoch', 'localtime') \
+		FROM urls WHERE id=" + std::to_string(Data->ID);
+	result = sqlite3_prepare_v2(DB, sql_lvt.c_str(), -1, &stmt, NULL);
+	result = sqlite3_step(stmt);
+	std::string lvt = (char*)sqlite3_column_text(stmt, 0);
+	std::string str_inf = "Число посещений: " + std::to_string(vc) + \
+	"\nВремя последнего посещения: " + lvt.c_str();
+	StringInfoLabel->Caption=str_inf.c_str();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ClearTableButtonClick(TObject *Sender)
