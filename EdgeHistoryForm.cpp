@@ -32,8 +32,8 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
 	int res = sqlite3_open(str.c_str(), &DB);
 	if (res != SQLITE_OK) {
-		ShowMessage(str.c_str());
-        sqlite3_finalize(stmt);
+		ShowMessage("Ошибка открытия базы данных");
+		sqlite3_finalize(stmt);
 		ExitProcess(0);
 	}
 }
@@ -50,7 +50,8 @@ void __fastcall TForm1::DisplayHistoryButtonClick(TObject *Sender)
 	const char* sql = "SELECT * FROM urls";
 	int result = sqlite3_prepare_v2(DB, sql, -1, &stmt, NULL);
 	if (result != SQLITE_OK) {
-		ShowMessage("Ошибка подготовки запроса");
+		ShowMessage("Ошибка подготовки запроса\n\
+		Возможно, браузер используется в данный момент");
 		sqlite3_close(DB);
 		ExitProcess(0);
 	}
