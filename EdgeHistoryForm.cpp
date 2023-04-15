@@ -33,6 +33,8 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
 	//Для браузера Chrome
 	//str = str + "\\..\\Local\\Google\\Chrome\\User Data\\Default\\History";
+	//Для браузера Yandex
+	//str = str + "\\..\\Local\\Yandex\\YandexBrowser\\User Data\\Default\\History";
 	int res = sqlite3_open(str.c_str(), &DB);
 	if (res != SQLITE_OK) {
 		ShowMessage("Ошибка открытия базы данных");
