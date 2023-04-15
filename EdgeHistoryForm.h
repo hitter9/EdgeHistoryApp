@@ -24,6 +24,9 @@ __published:	// IDE-managed Components
 	void __fastcall VirtualStringTreeGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
           TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);
 	void __fastcall VirtualStringTreeNodeClick(TBaseVirtualTree *Sender, const THitInfo &HitInfo);
+	void __fastcall ClearTableButtonClick(TObject *Sender);
+	void __fastcall ExitButtonClick(TObject *Sender);
+	void __fastcall DeleteStringButtonClick(TObject *Sender);
 
 
 private:	// User declarations

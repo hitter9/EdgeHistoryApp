@@ -83,18 +83,38 @@ void __fastcall TForm1::VirtualStringTreeNodeClick(TBaseVirtualTree *Sender, con
 {
 	PVirtualNode Node = Sender->GetFirstSelected();
 	data* Data = (data*)Sender->GetNodeData(Node);
-	std::string sql = "SELECT visit_count FROM urls where id=" \
-	+ std::to_string(Data->ID);
+	std::string sql = "SELECT visit_count FROM urls WHERE \
+	id=" + std::to_string(Data->ID);
 	int result = sqlite3_prepare_v2(DB, sql.c_str(), -1, &stmt, NULL);
-    if (result != SQLITE_OK) {
-		ShowMessage("Ошибка подготовки запроса");
-		sqlite3_close(DB);
-		ExitProcess(0);
-	}
 	result = sqlite3_step(stmt);
-	std::string vc = (char*)sqlite3_column_int(stmt, 0);
-	vc = "Число посещений: " + vc;
-	StringInfoLabel->Caption=vc.c_str();
+	int vc = sqlite3_column_int(stmt, 0);
+	std::string vc_inf = "Число посещений: " + std::to_string(vc);
+	StringInfoLabel->Caption=vc_inf.c_str();
 }
 //---------------------------------------------------------------------------
-
+void __fastcall TForm1::ClearTableButtonClick(TObject *Sender)
+{
+	VirtualStringTree->Clear();
+	StringInfoLabel->Caption="";
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::DeleteStringButtonClick(TObject *Sender)
+{
+	PVirtualNode Node = VirtualStringTree->GetFirstSelected();
+	for (int i = 0; i < VirtualStringTree->SelectedCount; i++) {
+		data* Data = (data*)VirtualStringTree->GetNodeData(Node);
+		std::string sql = "DELETE FROM urls WHERE id=" + \
+		std::to_string(Data->ID);
+		int result = sqlite3_exec(DB, sql.c_str(), NULL, NULL, &errmsg);
+		Node = VirtualStringTree->GetNextSelected(Node);
+	}
+    VirtualStringTree->DeleteSelectedNodes();
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::ExitButtonClick(TObject *Sender)
+{
+	sqlite3_finalize(stmt);
+	sqlite3_close(DB);
+	ExitProcess(0);
+}
+//---------------------------------------------------------------------------
