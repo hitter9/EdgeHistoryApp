@@ -49,6 +49,8 @@ void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
 	}
 	bool file_valid = PathFileExistsA(str.c_str());
 	if (file_valid == 1) {
+		DisplayHistoryButton->Enabled = 1;
+		DeleteStringButton->Enabled = 1;
 		int res = sqlite3_open(str.c_str(), &DB);
 		if (res != SQLITE_OK) {
 			ShowMessage("Ошибка открытия базы данных");
@@ -56,7 +58,7 @@ void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
 			ExitProcess(0);
 		}
 	}
-    else ShowMessage("Ошибка открытия базы данных\n\
+	else ShowMessage("Ошибка открытия базы данных\n\
 			Возможно, данный браузер не установлен");
 }
 //---------------------------------------------------------------------------
