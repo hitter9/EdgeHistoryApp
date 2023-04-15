@@ -27,9 +27,13 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-	int res = sqlite3_open("History", &DB);
+	char* path = getenv("APPDATA");
+	std::string str = path;
+	str = str + "\\..\\Local\\Microsoft\\Edge\\User Data\\Default\\History";
+	int res = sqlite3_open(str.c_str(), &DB);
 	if (res != SQLITE_OK) {
-		ShowMessage("Ошибка открытия базы данных");
+		ShowMessage(str.c_str());
+        sqlite3_finalize(stmt);
 		ExitProcess(0);
 	}
 }
