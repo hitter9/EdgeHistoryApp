@@ -51,6 +51,7 @@ void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
 	if (file_valid == 1) {
 		DisplayHistoryButton->Enabled = 1;
 		DeleteStringButton->Enabled = 1;
+        ClearHistoryButton->Enabled = 1;
 		int res = sqlite3_open(str.c_str(), &DB);
 		if (res != SQLITE_OK) {
 			ShowMessage("Ошибка открытия базы данных");
@@ -63,6 +64,7 @@ void __fastcall TForm1::ChooseBrowserSelect(TObject *Sender)
 			Возможно, данный браузер не установлен");
 		DisplayHistoryButton->Enabled = 0;
 		DeleteStringButton->Enabled = 0;
+		ClearHistoryButton->Enabled = 0;
 	}
 }
 //---------------------------------------------------------------------------
@@ -152,6 +154,17 @@ void __fastcall TForm1::DeleteStringButtonClick(TObject *Sender)
     VirtualStringTree->DeleteSelectedNodes();
 }
 //---------------------------------------------------------------------------
+void __fastcall TForm1::ClearHistoryButtonClick(TObject *Sender)
+{
+	const char* sql = "DELETE FROM urls";
+	sqlite3_exec(DB,sql,NULL,NULL,&errmsg);
+	VirtualStringTree->Clear();
+	StringInfoLabel->Caption="";
+    DisplayHistoryButton->Enabled = 0;
+	DeleteStringButton->Enabled = 0;
+	ClearHistoryButton->Enabled = 0;
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::ExitButtonClick(TObject *Sender)
 {
 	sqlite3_finalize(stmt);
@@ -159,4 +172,3 @@ void __fastcall TForm1::ExitButtonClick(TObject *Sender)
 	ExitProcess(0);
 }
 //---------------------------------------------------------------------------
-

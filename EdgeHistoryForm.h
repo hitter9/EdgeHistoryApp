@@ -19,6 +19,7 @@ __published:	// IDE-managed Components
 	TButton *ExitButton;
 	TLabel *StringInfoLabel;
 	TComboBox *ChooseBrowser;
+	TButton *ClearHistoryButton;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall DisplayHistoryButtonClick(TObject *Sender);
@@ -29,6 +30,7 @@ __published:	// IDE-managed Components
 	void __fastcall ExitButtonClick(TObject *Sender);
 	void __fastcall DeleteStringButtonClick(TObject *Sender);
 	void __fastcall ChooseBrowserSelect(TObject *Sender);
+	void __fastcall ClearHistoryButtonClick(TObject *Sender);
 
 
 private:	// User declarations
